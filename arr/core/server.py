@@ -14,12 +14,12 @@ class Server:
         self.port = port
         self.host = host
         self.mem = Memory()
-        self.handler = Handler()
         self.semaphore = Semaphore(max_clients)
+        self.handler = Handler(self.semaphore, self.mem)
 
     async def start_server(self) -> None:
 
-        server = await start_server_asyncio(Handler.handle_client, self.host, self.port)
+        server = await start_server_asyncio(self.handler.handle_client, self.host, self.port)
 
         async with server as s:
             print(f"Initing server: {server}")

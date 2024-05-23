@@ -1,7 +1,5 @@
 import asyncio
-from arr.core.server import (
-    Server
-)
+from arr.core.server import Server
 
 async def main():
     server = Server()

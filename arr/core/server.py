@@ -10,7 +10,7 @@ class Server:
     def __init__(self,
                  port: int  = 7070,
                  host: str = "localhost",
-                 max_clients: int = 1) -> None:
+                 max_clients: int = 50) -> None:
         self.port = port
         self.host = host
         self.mem = Memory()

@@ -8,14 +8,14 @@ class Resp:
         self.breader = ByteReader()
         self.mem = mem
 
-    def deserialize_request(self, data: bytes) -> bytes:
+    async def deserialize_request(self, data: bytes) -> bytes:
 
         first_b = data[0:1]
 
         match first_b:
             case b'*':
                 req = ArrayRequest(self.mem, data)
-                return req.hadle_array_command()
+                return await req.hadle_array_command()
             case _:
                 return self.type_not_found()
 

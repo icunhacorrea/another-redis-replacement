@@ -1,5 +1,6 @@
-from asyncio import Semaphore, StreamReader, StreamWriter
+import socket
 
+from asyncio import Semaphore, StreamReader, StreamWriter
 from arr.core.memory import Memory
 from arr.core.resp import Resp
 
@@ -11,15 +12,14 @@ class Handler:
         self.resp = Resp(self.mem)
 
     async def handle_client(self, reader: StreamReader, writer: StreamWriter):
-
         addr = writer.get_extra_info("peername")
         print(f"Connection from: {addr}")
 
         async with self.semaphore:
             try:
                 while True:
-                    data = await reader.read(100)
-                    self.show_data(data=data)
+                    data = await reader.read(4096)
+                    #self.show_data(data=data)
                     
                     if not data:
                         break
@@ -44,7 +44,6 @@ class Handler:
     
     async def process_data(self, data: bytes, addr: str) -> bytes:
         response = await self.resp.deserialize_request(data)
-        print(f"Response to client addr={addr}: {response}")
         return response
 
     def show_mem(self):

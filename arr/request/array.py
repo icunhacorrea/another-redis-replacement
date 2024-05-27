@@ -27,6 +27,7 @@ class ArrayRequest(Request):
             case _:
                 return await self.command_not_found()
 
+
     async def command_ping(self) -> bytes:
         return "+PONG\r\n".encode()
 

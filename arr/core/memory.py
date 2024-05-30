@@ -14,7 +14,7 @@ class Memory:
     async def get(self, key: str) -> Any:
         async with self._lock:
             if key not in self._mem.keys():
-                return "*-1\r\n"
+                return None
             return self._mem.get(key)
 
     def __repr__(self) -> str:

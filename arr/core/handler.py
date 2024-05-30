@@ -1,15 +1,17 @@
 import socket
 
 from asyncio import Semaphore, StreamReader, StreamWriter
+from arr.core.database.dicth import DictH
 from arr.core.memory import Memory
 from arr.core.resp import Resp
 
 class Handler:
 
-    def __init__(self, semaphore: Semaphore, mem: Memory) -> None:
+    def __init__(self, semaphore: Semaphore, mem: Memory, dicth: DictH) -> None:
         self.semaphore = semaphore
         self.mem = mem
-        self.resp = Resp(self.mem)
+        self.dicth = dicth
+        self.resp = Resp(self.mem, self.dicth)
 
     async def handle_client(self, reader: StreamReader, writer: StreamWriter):
         addr = writer.get_extra_info("peername")
@@ -51,4 +53,3 @@ class Handler:
 
     def show_data(self, data: bytes) -> None:
         print(f"Data: {data}")
-

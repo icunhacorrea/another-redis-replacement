@@ -1,6 +1,6 @@
 
 perf:
-	docker run --network host -it --rm redis:alpine redis-benchmark	-t set, -n 10000 -p 7070
+	docker run --network host -it --rm redis:alpine redis-benchmark	-t set,get, -n 10000 -p 7070
 
 perf-redis:
 	docker run --network host -it --rm redis:alpine redis-benchmark	-t set, -n 10000 -p 6379

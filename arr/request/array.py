@@ -1,12 +1,15 @@
 from typing import Any
+from arr.core.database.dicth import DictH
+from arr.core.database.entry import Entry
 from arr.core.memory import Memory
 from arr.request.base import Request
 
 class ArrayRequest(Request):
-    def __init__(self, mem: Memory, data: bytes) -> None:
+    def __init__(self, mem: Memory, dicth: DictH, data: bytes) -> None:
         super(ArrayRequest, self).__init__(data)
         self.array = []
         self.mem = mem
+        self.dicth = dicth
         self.process_array()
 
     def process_array(self) -> None:
@@ -40,6 +43,16 @@ class ArrayRequest(Request):
 
         return "+OK\r\n".encode()
 
+    async def command_set_dicth(self) -> bytes:
+        
+        if len(self.array) != 3:
+            return self.return_error("SET command must have 3 parameters.")
+
+        entry = Entry(key=self.array[1], value=self.array[2])
+        await self.dicth.set(entry=entry)
+
+        return "+OK\r\n".encode()
+
     async def command_get(self) -> bytes:
         print(self.array)
 
@@ -50,7 +63,7 @@ class ArrayRequest(Request):
         return self.construct_get_response(value=value)
 
     def construct_get_response(self, value: Any) -> bytes:
-        return f"+{value}\r\n".encode()
+        return "$-1\r\n".encode() if value is None else  f"+{value}\r\n".encode()
 
     async def command_not_found(self) -> bytes:
         return "+NOT FOUND\r\n".encode()

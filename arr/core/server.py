@@ -2,7 +2,6 @@ import socket
 from asyncio import Semaphore, start_server as start_server_asyncio
 from arr.core.database.dicth import DictH
 from arr.core.handler import Handler
-from arr.core.memory import Memory
 
 class Server:
 
@@ -12,10 +11,9 @@ class Server:
                  max_clients: int = 50) -> None:
         self.port = port
         self.host = host
-        self.mem = Memory()
         self.dicth = DictH(max_size=100)
         self.semaphore = Semaphore(max_clients)
-        self.handler = Handler(self.semaphore, self.mem, self.dicth)
+        self.handler = Handler(self.semaphore, self.dicth)
 
     async def start_server(self) -> None:
 

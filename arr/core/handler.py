@@ -1,17 +1,13 @@
-import socket
-
 from asyncio import Semaphore, StreamReader, StreamWriter
 from arr.core.database.dicth import DictH
-from arr.core.memory import Memory
 from arr.core.resp import Resp
 
 class Handler:
 
-    def __init__(self, semaphore: Semaphore, mem: Memory, dicth: DictH) -> None:
+    def __init__(self, semaphore: Semaphore, dicth: DictH) -> None:
         self.semaphore = semaphore
-        self.mem = mem
         self.dicth = dicth
-        self.resp = Resp(self.mem, self.dicth)
+        self.resp = Resp(self.dicth)
 
     async def handle_client(self, reader: StreamReader, writer: StreamWriter):
         addr = writer.get_extra_info("peername")
@@ -28,7 +24,8 @@ class Handler:
 
                     response = await self.process_data(data, addr=addr)
                     await self.write_response(writer, response=response)
-                    self.show_mem()
+                    #self.show_mem()
+                    self.dicth.print_list()
             except ConnectionResetError as err:
                 print(f"Connection lost with {addr}: {err}")
                 raise err

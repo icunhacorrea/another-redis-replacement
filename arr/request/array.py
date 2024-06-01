@@ -1,14 +1,12 @@
 from typing import Any
 from arr.core.database.dicth import DictH
 from arr.core.database.entry import Entry
-from arr.core.memory import Memory
 from arr.request.base import Request
 
 class ArrayRequest(Request):
-    def __init__(self, mem: Memory, dicth: DictH, data: bytes) -> None:
+    def __init__(self, dicth: DictH, data: bytes) -> None:
         super(ArrayRequest, self).__init__(data)
         self.array = []
-        self.mem = mem
         self.dicth = dicth
         self.process_array()
 
@@ -35,15 +33,6 @@ class ArrayRequest(Request):
         return "+PONG\r\n".encode()
 
     async def command_set(self) -> bytes:
-
-        if len(self.array) != 3:
-            return self.return_error("SET command must have 3 parameters.")
-
-        await self.mem.set(key=self.array[1], value=self.array[2])
-
-        return "+OK\r\n".encode()
-
-    async def command_set_dicth(self) -> bytes:
         
         if len(self.array) != 3:
             return self.return_error("SET command must have 3 parameters.")
@@ -54,12 +43,12 @@ class ArrayRequest(Request):
         return "+OK\r\n".encode()
 
     async def command_get(self) -> bytes:
-        print(self.array)
 
-        if len(self.array) != 2:
+        if len(self.array)  != 2:
             return self.return_error("GET command must have 2 parameters.")
 
-        value = await self.mem.get(key=self.array[1])
+        value = await self.dicth.get(key=self.array[1]) 
+
         return self.construct_get_response(value=value)
 
     def construct_get_response(self, value: Any) -> bytes:

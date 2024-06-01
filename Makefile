@@ -1,3 +1,10 @@
+.PHONY: tests
+
+run-server:
+	poetry run python -m arr
+	
+tests:
+	poetry run pytest
 
 perf:
 	docker run --network host -it --rm redis:alpine redis-benchmark	-t set,get, -n 10000 -p 7070
@@ -18,3 +25,4 @@ run-redis:
 
 stop-redis:
 	docker stop redis
+
